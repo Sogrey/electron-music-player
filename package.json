@@ -4,11 +4,10 @@
   "description": "音乐播放器",
   "main": "main.js",
   "scripts": {
+    "start": "nodemon --watch main.js --exec electron .",
     "dev": "electron .",
     "packager": "electron-packager ./ electron-music-player --platform win32 --arch x64 --out OutApp --electron-version 4.0.1 --overwrite --icon=./icon.ico --version-string.CompanyName=Sogrey --version-string.ProductName=electron-music-player",
     "setup": "electron-installer-windows --src OutApp/electron-music-player-win32-x64/ --dest OutApp/installers/",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,7 +18,8 @@
   "license": "MIT",
   "keywords": [
     "electron",
-    "windows"
+    "windows",
+    "music-player"
   ],
   "bugs": {
     "url": "https://github.com/Sogrey/electron-music-player/issues"
@@ -30,7 +30,7 @@
     "electron-installer-windows": "^2.0.0",
     "electron-packager": "^13.0.1",
     "electron-log": "^3.0.6",
-    "electron-builder": "^20.38.3"
+    "nodemon": "^1.19.1"
   },
   "dependencies": {
     "axios": "^0.19.0",

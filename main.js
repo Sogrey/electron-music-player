@@ -1,18 +1,10 @@
 // Modules to control application life and create native browser window
 const {
   app,
-  BrowserWindow
+  BrowserWindow,
+  ipcMain
 } = require('electron');
 const path = require('path');
-
-//electron-log
-var log = require('electron-log');
-// log.error("error");
-// log.warn("warn");
-// log.info("info");
-// log.verbose("verbose");
-// log.debug("debug");
-// log.silly("silly");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -23,18 +15,44 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    show: false, //暂不显示，等窗口加载完成再显示
+    backgroundColor: '#2e2c29', //窗口背景色
     webPreferences: {
       //预加载。
       //界面的其它脚本运行之前预先加载一个指定脚本. 
       //这个脚本将一直可以使用 node APIs 无论 node integration 是否开启. 
       //脚本路径为绝对路径. 当 node integration 关闭, 预加载的脚本将从全局范围重新引入node的全局引用标志.
       //__dirname : 当前目录
-      preload: path.join(__dirname, 'preload.js')
+      // preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true
     }
   });
+  //窗口加载完成-显示
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html');
+  mainWindow.loadFile('./renderer/index.html');
+
+  ipcMain.on('add-music-window', () => { //收到添加音乐的请求
+    const addWindow = new BrowserWindow({
+      width: 500,
+      height: 400,
+      webPreferences: {
+        nodeIntegration: true
+      },
+      parent: mainWindow
+    });
+    addWindow.loadFile("./renderer/add.html")
+  })
+
+  ipcMain.on('select-music-dialog', () => { //收到选择音乐的请求
+    console.log('select-music-dialog');
+  })
+  ipcMain.on('import-music', () => { //收到导入音乐的请求
+    console.log('import-music');
+  })
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
