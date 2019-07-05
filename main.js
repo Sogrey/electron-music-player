@@ -2,25 +2,13 @@
 const {
   app,
   BrowserWindow,
-  ipcMain,dialog
+  ipcMain,
+  dialog
 } = require('electron');
 const path = require('path');
-const Store = require('electron-store')
-const store = new Store();
-console.log(app.getPath('userData'));
- 
-// store.set('unicorn', '🦄');
-// console.log(store.get('unicorn'));
-// //=> '🦄'
- 
-// // Use dot-notation to access nested properties
-// store.set('foo.bar', true);
-// console.log(store.get('foo'));
-// //=> {bar: true}
- 
-// store.delete('unicorn');
-// console.log(store.get('unicorn'));
-// //=> undefined
+const DataStore = require('./renderer/MusicDataStore')
+
+const musicStore = new DataStore({'name': 'musicData'})
 
 class AppWindow extends BrowserWindow {
   constructor(config, fileLocation) {
@@ -68,18 +56,21 @@ function createWindow() {
 
   ipcMain.on('select-music-dialog', (evnet) => { //收到选择音乐的请求
     dialog.showOpenDialog({
-      properties :['openFile','multiSelections'],
-      filters: [
-        { name: 'Music', extensions: ['mp3'] }
-      ]
-    },(files)=>{
-      if(files){
-        evnet.sender.send('select-files',files)
+      properties: ['openFile', 'multiSelections'],
+      filters: [{
+        name: 'Music',
+        extensions: ['mp3']
+      }]
+    }, (files) => {
+      if (files) {
+        evnet.sender.send('select-files', files)
       }
     })
   })
-  ipcMain.on('import-music', () => { //收到导入音乐的请求
-    console.log('import-music');
+  ipcMain.on('import-music', (evnet, musicFileList) => { //收到导入音乐的请求
+    // console.log('import-music', musicFileList)
+    const updateTracks = musicStore.addTracks(musicFileList).getTracks()
+    // console.log(updateTracks)
   })
 
   // Open the DevTools.
