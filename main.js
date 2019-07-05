@@ -2,23 +2,31 @@
 const {
   app,
   BrowserWindow,
-  ipcMain
+  ipcMain,dialog
 } = require('electron');
 const path = require('path');
 
-class AppWindow extends BrowserWindow{
-  constructor(config,fileLocation){
+class AppWindow extends BrowserWindow {
+  constructor(config, fileLocation) {
     const basicConfig = {
       width: 800,
       height: 600,
+      show: false, //暂不显示，等窗口加载完成再显示
       webPreferences: {
         nodeIntegration: true
       }
     }
     // const finalConfig = Object.assign(basicConfig,config)
-    const finalConfig = {...basicConfig,...config}
+    const finalConfig = {
+      ...basicConfig,
+      ...config
+    }
     super(finalConfig)
     this.loadFile(fileLocation)
+    //窗口加载完成-显示
+    this.once('ready-to-show', () => {
+      this.show();
+    })
   }
 }
 
@@ -28,9 +36,7 @@ let mainWindow;
 
 function createWindow() {
   // Create the browser window.
-  mainWindow = new AppWindow({
-    show: false, //暂不显示，等窗口加载完成再显示
-  },'./renderer/index.html');
+  mainWindow = new AppWindow({}, './renderer/index.html');
   //窗口加载完成-显示
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
@@ -41,11 +47,20 @@ function createWindow() {
       width: 500,
       height: 400,
       parent: mainWindow
-    },"./renderer/add.html")
+    }, "./renderer/add.html")
   })
 
-  ipcMain.on('select-music-dialog', () => { //收到选择音乐的请求
-    console.log('select-music-dialog');
+  ipcMain.on('select-music-dialog', (evnet) => { //收到选择音乐的请求
+    dialog.showOpenDialog({
+      properties :['openFile','multiSelections'],
+      filters: [
+        { name: 'Music', extensions: ['mp3'] }
+      ]
+    },(files)=>{
+      if(files){
+        evnet.sender.send('select-files',files)
+      }
+    })
   })
   ipcMain.on('import-music', () => { //收到导入音乐的请求
     console.log('import-music');
