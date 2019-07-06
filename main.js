@@ -12,6 +12,8 @@ const musicStore = new DataStore({
   'name': 'musicData'
 })
 
+// musicStore.clearTrack()
+
 class AppWindow extends BrowserWindow {
   constructor(config, fileLocation) {
     const basicConfig = {
@@ -43,6 +45,11 @@ let mainWindow, addWindow;
 function createWindow() {
   // Create the browser window.
   mainWindow = new AppWindow({}, './renderer/index.html');
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.send('update-musics', musicStore.getTracks())
+  })
+
   //窗口加载完成-显示
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
@@ -73,8 +80,14 @@ function createWindow() {
   ipcMain.on('import-music', (evnet, musicFileList) => { //收到导入音乐的请求
     const updateTracks = musicStore.addTracks(musicFileList).getTracks()
     addWindow.close()
-    mainWindow.send('update-musics', updateTracks)    
+    mainWindow.send('update-musics', updateTracks)
   })
+
+  ipcMain.on('delete-track', (evnet, musicId) => { //删除音乐的请求
+    musicStore.deleteTrack(musicId)
+    mainWindow.send('update-musics', musicStore.getTracks())
+  })
+  
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()

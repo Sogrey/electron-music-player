@@ -61,5 +61,16 @@ class DataStore extends Store {
         this.tracks = this.tracks.filter(item => item.id !== deletedId)//过滤掉指定的条目，其他的存储
         return this.saveTracks()
     }
+
+    /**
+     * 清空
+     *
+     * @returns
+     * @memberof DataStore
+     */
+    clearTrack() {
+        this.tracks = []
+        return this.saveTracks()
+    }
 }
 module.exports = DataStore

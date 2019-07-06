@@ -10,9 +10,15 @@
 <body>
     <div class="container mt-4 mb-4">
         <h1>添加音乐到曲库</h1>
-        <div id="musicList" class="mt-2">您还未选择任何音乐</div>
-        <button id="select-music-button" type="button" class="btn btn-outline-primary btn-lg btn-block mt-4">选择音乐</button>
-        <button id="import-music-button" type="button" class="btn btn-outline-success btn-lg btn-block mt-4">导入音乐到乐库</button>
+        <div id="musicList" class="mt-2">
+            <div class="alert alert-success" role="alert">
+                您还未选择任何音乐
+            </div>
+        </div>
+        <button id="select-music-button" type="button"
+            class="btn btn-outline-primary btn-lg btn-block mt-4">选择音乐</button>
+        <button id="import-music-button" type="button"
+            class="btn btn-outline-success btn-lg btn-block mt-4">导入音乐到乐库</button>
     </div>
     <script>
         require('./add.js')
