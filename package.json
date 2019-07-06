@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --watch main.js --exec electron .",
     "start": "electron .",
-    "packager": "electron-packager ./ electron-music-player --platform win32 --arch x64 --out OutApp --electron-version 4.0.1 --overwrite --icon=./icon.ico --version-string.CompanyName=Sogrey --version-string.ProductName=electron-music-player",
+    "packager": "rimraf OutApp & electron-packager ./ electron-music-player --platform win32 --arch x64 --out OutApp --electron-version 4.0.1 --overwrite --icon=./icon.ico --version-string.CompanyName=Sogrey --version-string.ProductName=electron-music-player",
     "setup": "electron-installer-windows --src OutApp/electron-music-player-win32-x64/ --dest OutApp/installers/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -30,7 +30,8 @@
     "electron-installer-windows": "^2.0.0",
     "electron-packager": "^13.0.1",
     "electron-log": "^3.0.6",
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.1",
+    "rimraf": "^2.6.3"
   },
   "dependencies": {
     "axios": "^0.19.0",

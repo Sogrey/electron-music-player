@@ -73,6 +73,7 @@ function createWindow() {
   ipcMain.on('import-music', (evnet, musicFileList) => { //收到导入音乐的请求
     const updateTracks = musicStore.addTracks(musicFileList).getTracks()
     mainWindow.send('update-musics', updateTracks)
+    addWindow.close()
   })
 
   // Open the DevTools.
