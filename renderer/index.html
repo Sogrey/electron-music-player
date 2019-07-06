@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <title>音乐播放器</title>
     <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../node_modules/aplayer/dist/APlayer.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-        <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="./index.css">
 </head>
 
 <body>
@@ -16,7 +17,9 @@
         <button id="add-music-button" type="button" class="btn btn-primary btn-lg btn-block mt-4">添加歌曲</button>
         <div id="tracksList" class="mt-4"></div>
     </div>
+
     <div class="container fixed-bottom bg-white pb-4">
+        <div id="aplayer"></div>
         <hr />
         <div class="row my-2" id="player-status">
         </div>
@@ -26,8 +29,11 @@
             </div>
         </div>
     </div>
+    <script src="../node_modules/aplayer/dist/APlayer.min.js"></script>
     <script>
         require('./index.js')
+
+
     </script>
 </body>
 

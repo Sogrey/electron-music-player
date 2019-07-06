@@ -5,7 +5,6 @@ const {
     $
 } = require('./helper')
 
-
 const renderListHTML = (tracks) => {
     const tracksList = $('tracksList')
     const tracksListHTML = tracks.reduce((html, track) => {
@@ -38,3 +37,26 @@ ipcRenderer.on('update-musics', (event, updateTracks) => {
         renderListHTML(updateTracks)
     }
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const ap = new APlayer({
+    container: document.getElementById('aplayer'),
+    audio: [{
+        name: 'Victory',
+        artist: 'Two Steps From Hell',
+        url: '../musics/Victory.mp3',
+        cover: '../musics/Victory.jpg'
+    }]
+});
