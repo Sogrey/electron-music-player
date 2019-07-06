@@ -8,7 +8,9 @@ const {
 const path = require('path');
 const DataStore = require('./renderer/MusicDataStore')
 
-const musicStore = new DataStore({'name': 'musicData'})
+const musicStore = new DataStore({
+  'name': 'musicData'
+})
 
 class AppWindow extends BrowserWindow {
   constructor(config, fileLocation) {
@@ -36,7 +38,7 @@ class AppWindow extends BrowserWindow {
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+let mainWindow, addWindow;
 
 function createWindow() {
   // Create the browser window.
@@ -47,10 +49,11 @@ function createWindow() {
   })
 
   ipcMain.on('add-music-window', () => { //收到添加音乐的请求
-    const addWindow = new AppWindow({
+    addWindow = new AppWindow({
       width: 500,
       height: 400,
-      parent: mainWindow
+      parent: mainWindow,
+      modal: true
     }, "./renderer/add.html")
   })
 
@@ -68,9 +71,8 @@ function createWindow() {
     })
   })
   ipcMain.on('import-music', (evnet, musicFileList) => { //收到导入音乐的请求
-    // console.log('import-music', musicFileList)
     const updateTracks = musicStore.addTracks(musicFileList).getTracks()
-    // console.log(updateTracks)
+    mainWindow.send('update-musics', updateTracks)
   })
 
   // Open the DevTools.
