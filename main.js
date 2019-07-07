@@ -40,19 +40,23 @@ class AppWindow extends BrowserWindow {
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow, addWindow;
+let mainWindow, addWindow, playWindow;
 
 function createWindow() {
   // Create the browser window.
   mainWindow = new AppWindow({}, './renderer/index.html');
+  playWindow = new AppWindow({
+    x: 0,
+    y: 600,
+    width: 500,
+    height: 60,
+    transparent: true,
+    backgroundColor: "#00000000",
+    frame: false
+  }, './renderer/play.html');
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.send('update-musics', musicStore.getTracks())
-  })
-
-  //窗口加载完成-显示
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show();
   })
 
   ipcMain.on('add-music-window', () => { //收到添加音乐的请求
@@ -87,10 +91,30 @@ function createWindow() {
     musicStore.deleteTrack(musicId)
     mainWindow.send('update-musics', musicStore.getTracks())
   })
-  
+
+  ipcMain.on('toggle-mainWindow', () => { //显示/隐藏主窗口
+    if (!mainWindow || mainWindow.isDestroyed()) {console.log(1)
+      mainWindow = new AppWindow({}, './renderer/index.html');
+
+      mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.send('update-musics', musicStore.getTracks())
+      })
+    } else if (mainWindow && !mainWindow.isVisible()) {console.log(2)
+      mainWindow.show();
+    } else if (mainWindow && mainWindow.isVisible()) {
+      console.log(3)
+      mainWindow.close();
+    }
+  })
+
+  ipcMain.on('exit', () => { //退出程序
+    app.quit();
+  })
+
+
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  // playWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {

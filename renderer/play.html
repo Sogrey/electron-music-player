@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>音乐播放器</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link href="../node_modules/aplayer/dist/APlayer.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./play.css">
+</head>
+
+<body style="-webkit-app-region: drag">    
+    <div id="aplayer"></div>
+    <i id="play-menu" class="fas fa-ellipsis-h play-menu"></i>
+    <script src="../node_modules/aplayer/dist/APlayer.min.js"></script>
+    <script>
+        require('./play.js')
+    </script>
+</body>
+
+</html>
