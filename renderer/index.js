@@ -43,6 +43,7 @@ $('tracksList').addEventListener('click', (event) => {
       if (currentTrack && currentTrack.id === id) {
         // 继续播放音乐
         console.log("继续播放音乐");
+        ipcRenderer.send('continue-music',currentTrack)
       } else {
         // 播放新的歌曲，注意还原之前的图标
         currentTrack = allTracks.find(track => track.id === id)
@@ -52,12 +53,14 @@ $('tracksList').addEventListener('click', (event) => {
         if (resetIconEle) {
           resetIconEle.classList.replace('fa-pause', 'fa-play')
         }
+        ipcRenderer.send('play-music',currentTrack)
       }
       classList.replace('fa-play', 'fa-pause')
     } else if (id && classList.contains('fa-pause')) {
       // 处理暂停逻辑
       console.log("暂停播放");
       classList.replace('fa-pause', 'fa-play')
+      ipcRenderer.send('pause-music',currentTrack)
     } else if (id && classList.contains('fa-trash-alt')) {
       // 发送事件 删除这条音乐
       ipcRenderer.send('delete-track', id)
@@ -70,3 +73,4 @@ ipcRenderer.on('update-musics', (event, updateTracks) => {
         renderListHTML(updateTracks)
     }
 })
+
