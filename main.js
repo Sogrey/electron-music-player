@@ -64,18 +64,23 @@ function createWindow() {
   mainWindow = new AppWindow({}, './renderer/index.html');
   playWindow = new AppWindow({
     x: 0,
-    y: 600,
+    y: 60,
     width: 500,
-    height: 60,
+    height: 600,
     notAutoShow: true,//自定义，不主动显示窗口，需要时 .show() 再显示
     resizable: false,
     useContentSize: true,
     transparent: true,
     backgroundColor: "#00000000",
-    frame: false
+    frame: false,
+    webPreferences: {
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true
+    }
   }, './renderer/play.html');
 
-  // playWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
+  playWindow.webContents.openDevTools()
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.send('update-musics', musicStore.getTracks())

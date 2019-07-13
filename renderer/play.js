@@ -1,5 +1,5 @@
 const {
-    ipcRenderer
+    ipcRenderer,remote
 } = require('electron')
 const {
     $
@@ -7,9 +7,6 @@ const {
 
 // const jsmediatags = require('jsmediatags');
 
-const {
-    remote
-} = require('electron');
 const {
     Menu,
     MenuItem
@@ -51,14 +48,13 @@ $('play-menu').addEventListener('click', () => {
     })
 })
 
-var allTracks = [] //所有音乐
-var currentTrack = {} //当前音乐
 let aplayer;
 
 //播放音乐
 ipcRenderer.on('play-music-window', (event, musicList, music) => {
     console.log('play-music-window')
     if (aplayer) {
+        console.log(musicList,music);
         if (musicList instanceof Array && musicList.length > 0) {
             var musics = [];
             var currentMusicIndex = 0;
@@ -119,7 +115,6 @@ function crateAPlayer() {
         // aplayer.on('listswitch', function () {
         //     ipcRenderer.send('aplayer-listswitch',aplayer.) //显示/隐藏主窗口
         // });
-        
     }
 }
 
