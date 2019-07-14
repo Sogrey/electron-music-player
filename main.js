@@ -72,15 +72,15 @@ function createWindow() {
     useContentSize: true,
     transparent: true,
     backgroundColor: "#00000000",
-    frame: false,
+    frame: false,parent:mainWindow,
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInWorker: true
     }
   }, './renderer/play.html');
 
-  mainWindow.webContents.openDevTools()
-  playWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
+  // playWindow.webContents.openDevTools()
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.send('update-musics', musicStore.getTracks())

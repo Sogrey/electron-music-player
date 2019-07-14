@@ -2,7 +2,7 @@ const {
     ipcRenderer,remote
 } = require('electron')
 const {
-    $
+    $,$Selector
 } = require('./helper')
 
 // const jsmediatags = require('jsmediatags');
@@ -75,6 +75,7 @@ ipcRenderer.on('play-music-window', (event, musicList, music) => {
 
             aplayer.list.switch(currentMusicIndex);
         }
+        
         aplayer.play();
     }
 })
@@ -115,6 +116,10 @@ function crateAPlayer() {
         // aplayer.on('listswitch', function () {
         //     ipcRenderer.send('aplayer-listswitch',aplayer.) //显示/隐藏主窗口
         // });
+
+
+        $Selector('.aplayer-button').click();
+        $Selector('.aplayer-button').click();
     }
 }
 
