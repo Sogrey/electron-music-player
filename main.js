@@ -49,7 +49,7 @@ class AppWindow extends BrowserWindow {
     this.loadFile(fileLocation)
     //窗口加载完成-显示
     this.once('ready-to-show', () => {
-      if (!finalConfig.notAutoShow)
+      // if (!finalConfig.notAutoShow)
         this.show();
     })
   }
@@ -64,10 +64,10 @@ function createWindow() {
   mainWindow = new AppWindow({}, './renderer/index.html');
   playWindow = new AppWindow({
     x: 0,
-    y: 600,
+    y: 60,
     width: 500,
-    height: 60,
-    notAutoShow: true,//自定义，不主动显示窗口，需要时 .show() 再显示
+    height: 600,
+    // notAutoShow: true,//自定义，不主动显示窗口，需要时 .show() 再显示
     resizable: false,
     useContentSize: true,
     transparent: true,
@@ -78,12 +78,17 @@ function createWindow() {
       nodeIntegrationInWorker: true
     }
   }, './renderer/play.html');
+  // playWindow.setIgnoreMouseEvents(true);
 
   // mainWindow.webContents.openDevTools()
   // playWindow.webContents.openDevTools()
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.send('update-musics', musicStore.getTracks())
+  })
+
+  playWindow.webContents.on('did-finish-load', () => {
+    playWindow.send('update-musics', musicStore.getTracks())
   })
 
   ipcMain.on('add-music-window', () => { //收到添加音乐的请求
@@ -121,17 +126,14 @@ function createWindow() {
 
   ipcMain.on('toggle-mainWindow', () => { //显示/隐藏主窗口
     if (!mainWindow || mainWindow.isDestroyed()) {
-      console.log(1)
       mainWindow = new AppWindow({}, './renderer/index.html');
 
       mainWindow.webContents.on('did-finish-load', () => {
         mainWindow.send('update-musics', musicStore.getTracks())
       })
     } else if (mainWindow && !mainWindow.isVisible()) {
-      console.log(2)
       mainWindow.show();
     } else if (mainWindow && mainWindow.isVisible()) {
-      console.log(3)
       mainWindow.close();
     }
   })
@@ -144,7 +146,7 @@ function createWindow() {
   ipcMain.on('play-music', (event, arg) => { //播放音乐
     if (playWindow) {
       playWindow.show();
-      playWindow.send('play-music-window', musicStore.getTracks(), arg)
+      playWindow.send('play-music-window',  arg)
     }
   })
   ipcMain.on('pause-music', (event, arg) => { //暂停播放音乐

@@ -1,6 +1,6 @@
 {
   "name": "electron-music-player",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "音乐播放器",
   "main": "main.js",
   "scripts": {
@@ -8,6 +8,7 @@
     "start": "electron .",
     "packager": "rimraf OutApp & electron-packager ./ electron-music-player --platform win32 --arch x64 --out OutApp --electron-version 4.0.1 --overwrite --icon=./icon.ico --version-string.CompanyName=Sogrey --version-string.ProductName=electron-music-player",
     "setup": "electron-installer-windows --src OutApp/electron-music-player-win32-x64/ --dest OutApp/installers/",
+    "pack":"npm run packager & npm run setup",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

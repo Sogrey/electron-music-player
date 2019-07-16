@@ -1,9 +1,22 @@
 const {
-    ipcRenderer,remote
+    ipcRenderer,
+    remote
 } = require('electron')
 const {
-    $,$Selector
+    $,
+    $Selector
 } = require('./helper')
+
+//这将使网页在 `el` 外面时穿透，在它内部正常。
+let win = remote.getCurrentWindow()
+let el = $('play-content')
+el.addEventListener('mouseenter', () => {
+    win.setIgnoreMouseEvents(false)
+  
+})
+el.addEventListener('mouseleave', () => {
+    win.setIgnoreMouseEvents(true, { forward: true })
+})
 
 // const jsmediatags = require('jsmediatags');
 
@@ -49,33 +62,40 @@ $('play-menu').addEventListener('click', () => {
 })
 
 let aplayer;
+let allTracks = [];
 
 //播放音乐
-ipcRenderer.on('play-music-window', (event, musicList, music) => {
+ipcRenderer.on('play-music-window', (event, music) => {
     console.log('play-music-window')
     if (aplayer) {
-        console.log(musicList,music);
-        if (musicList instanceof Array && musicList.length > 0) {
-            var musics = [];
-            var currentMusicIndex = 0;
-            for (let index = 0; index < musicList.length; index++) {
-                const musicItem = musicList[index];
-                if (musicItem.id === music.id)
-                    currentMusicIndex = index;
-                musics.push({
-                    id: musicItem.id,
-                    name: musicItem.fileName,
+        console.log(music);
+        if (allTracks instanceof Array && allTracks.length > 0) {
+            let isInclude = false;
+            let musicIndex = -1;
+            for (let index = 0; index < allTracks.length; index++) {
+                const track = allTracks[index];
+                if (track.id == music.id) {
+                    isInclude = true;
+                    musicIndex = index;
+                    break;
+                }
+            }
+
+            if(!isInclude){
+                isInclude.push(music);
+                musicIndex = allTracks.length;
+                ap.list.add([{
+                    id: music.id,
+                    name: music.fileName,
                     artist: '未定义',
-                    url: musicItem.path,
+                    url: music.path,
                     cover: '../musics/nopic.jpg',
                     theme: '#ebd0c2'
-                });
+                }]);
             }
-            aplayer.list.add(musics);
-
-            aplayer.list.switch(currentMusicIndex);
+            aplayer.list.switch(musicIndex);
         }
-        
+
         aplayer.play();
     }
 })
@@ -94,33 +114,85 @@ ipcRenderer.on('continue-music-window', (event, music) => {
     }
 })
 
-function crateAPlayer() {
-    if (!aplayer) {
-        aplayer = new APlayer({
-            container: $('aplayer'),
-            theme: '#FADFA3',
-            fixed: true,
-            mini: true,
-            loop: 'all',
-            order: 'list',
-            preload: 'auto',
-            listFolded: true,
-            audio: []
-        });
-        aplayer.on('listshow', function () {
-            ipcRenderer.send('toggle-mainWindow') //显示/隐藏主窗口
-        });
-        aplayer.on('listhide', function () {
-            ipcRenderer.send('toggle-mainWindow') //显示/隐藏主窗口
-        });
-        // aplayer.on('listswitch', function () {
-        //     ipcRenderer.send('aplayer-listswitch',aplayer.) //显示/隐藏主窗口
-        // });
+
+ipcRenderer.on('update-musics', (event, updateTracks) => {
+    if (Array.isArray(updateTracks)) {
+        allTracks = updateTracks
+        // renderListHTML(updateTracks)
+
+        var audios = [];
+
+        for (let index = 0; index < updateTracks.length; index++) {
+            const track = updateTracks[index];
+            if (track) {
+                audios.push({
+                    id: track.id,
+                    name: track.fileName,
+                    artist: '未定义',
+                    url: track.path,
+                    cover: '../images/nopic.jpg',
+                    theme: '#ebd0c2'
+                });
+            }
+        }
+        console.log(audios);
+        if (!aplayer) {
+            aplayer = new APlayer({
+                container: $('aplayer'),
+                theme: '#FADFA3',
+                fixed: true,
+                mini: true,
+                loop: 'all',
+                order: 'list',
+                preload: 'auto',
+                listFolded: true,
+                audio: audios
+            });
+            // aplayer.on('listshow', function () {
+            //     ipcRenderer.send('toggle-mainWindow') //显示/隐藏主窗口
+            // });
+            // aplayer.on('listhide', function () {
+            //     ipcRenderer.send('toggle-mainWindow') //显示/隐藏主窗口
+            // });
+            // aplayer.on('listswitch', function () {
+            //     ipcRenderer.send('aplayer-listswitch',aplayer.) //显示/隐藏主窗口
+            // });
 
 
-        $Selector('.aplayer-button').click();
-        $Selector('.aplayer-button').click();
+            $Selector('.aplayer-button').click();
+            $Selector('.aplayer-button').click();
+        }
     }
-}
+})
 
-crateAPlayer();
+
+// function crateAPlayer() {
+//     if (!aplayer) {
+//         aplayer = new APlayer({
+//             container: $('aplayer'),
+//             theme: '#FADFA3',
+//             fixed: true,
+//             mini: true,
+//             loop: 'all',
+//             order: 'list',
+//             preload: 'auto',
+//             listFolded: true,
+//             audio: []
+//         });
+//         aplayer.on('listshow', function () {
+//             ipcRenderer.send('toggle-mainWindow') //显示/隐藏主窗口
+//         });
+//         aplayer.on('listhide', function () {
+//             ipcRenderer.send('toggle-mainWindow') //显示/隐藏主窗口
+//         });
+//         // aplayer.on('listswitch', function () {
+//         //     ipcRenderer.send('aplayer-listswitch',aplayer.) //显示/隐藏主窗口
+//         // });
+
+
+//         $Selector('.aplayer-button').click();
+//         $Selector('.aplayer-button').click();
+//     }
+// }
+
+// crateAPlayer();
