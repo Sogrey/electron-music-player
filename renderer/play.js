@@ -7,12 +7,11 @@ const {
     $Selector
 } = require('./helper')
 
-//这将使网页在 `el` 外面时穿透，在它内部正常。
+//这将使网页在 `el` 外面点击时穿透，在它内部正常。
 let win = remote.getCurrentWindow()
 let el = $('play-content')
 el.addEventListener('mouseenter', () => {
-    win.setIgnoreMouseEvents(false)
-  
+    win.setIgnoreMouseEvents(false)  
 })
 el.addEventListener('mouseleave', () => {
     win.setIgnoreMouseEvents(true, { forward: true })
