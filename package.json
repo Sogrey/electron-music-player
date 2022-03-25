@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/Sogrey/electron-music-player#readme",
   "devDependencies": {
-    "electron": "^11.5.0",
+    "electron": "^13.6.6",
     "electron-installer-windows": "^2.0.0",
     "electron-packager": "^13.0.1",
     "electron-log": "^3.0.6",
